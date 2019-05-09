@@ -4,6 +4,7 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 
+
 const Notification = ({ notification }) => {
   if (notification.message === null) {
     return null
@@ -54,13 +55,13 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
-  const notify = (message, type='success') => {
+  const notify = (message, type = 'success') => {
     setNotification({ message, type })
     setTimeout(() => setNotification({ message: null }), 5000)
   }
-  
 
-  const handleLogout = async (event) => {
+
+  const handleLogout = async () => {
     setUser(null)
     window.localStorage.removeItem('loggedNoteappUser')
 
@@ -80,7 +81,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      notify(`väärä nimi`, 'error')
+      notify('väärä käyttäjänimi tai salasana', 'error')
     }
   }
   const addBlog = (event) => {
@@ -90,21 +91,17 @@ const App = () => {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
-      likes: "0",
+      likes: '0',
     }
-     notify(`uusi luotu: ${newBlog.title}`)
+    notify(`uusi luotu nimellä: ${newBlog.title}`)
     blogService
-    .create(newBlog)
-    .then(returnedBlog => {
-    setBlogs(blogs.concat(returnedBlog))
-    setNewTitle('')
-    setNewAuthor('')
-    setNewUrl('')
-    })
-    .catch(error =>{
-      notify(`et voi luoda uutta blogia ilman nimeä, julkaisijaa ja osoitetta!`, 'error')
-    } ) 
-
+      .create(newBlog)
+      .then(returnedBlog => {
+        setBlogs(blogs.concat(returnedBlog))
+        setNewTitle('')
+        setNewAuthor('')
+        setNewUrl('')
+      })
   }
   const handleTitleChange = (event) => {
     setNewTitle(event.target.value)
@@ -121,7 +118,7 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <h2> Kirjaudu </h2>
       <div>käyttäjätunnus
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -130,7 +127,7 @@ const App = () => {
       </div>
       <div>
         salasana
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -170,8 +167,8 @@ const App = () => {
         <div>
           <p> Sisäänkirjautuneena:  {user.name}</p>
           <button onClick={handleLogout}>kirjaudu ulos</button>
-           <div>{newBlogForm()}</div>
-           {blogsForm()}
+          <div>{newBlogForm()}</div>
+          {blogsForm()}
 
         </div>
 
