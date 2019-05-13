@@ -42,7 +42,7 @@ blogsRouter.post('/', async (request, response, next) => {
     }
 
     const savedBlog = await blog.save()
-    user.blogs = user.blogs.concat(savedBlog._id)
+    user.blogs = user.blogs.concat(savedBlog)
     await user.save()
 
     response.json(savedBlog.toJSON())

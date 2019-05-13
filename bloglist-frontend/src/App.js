@@ -60,40 +60,54 @@ const App = () => {
     setTimeout(() => setNotification({ message: null }), 5000)
   }
 
+  const noti = (message, type = 'error') => {
+    setNotification({ message, type })
+    setTimeout(() => setNotification({ message: null }), 5000)
+  }
 
-  const handleLogout = async () => {
-    setUser(null)
+
+  const handleLogout = () => {
+
+    blogService.removeToken()
     window.localStorage.removeItem('loggedNoteappUser')
-
+    setUser(null)
+    console.log('locals: ', window.localStorage.getItem('loggedNoteappUser'))
+    console.log('user:', user.name)
   }
 
   const handleLogin = async (event) => {
+
     event.preventDefault()
     try {
+
       const user = await loginService.login({
         username, password,
       })
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
       )
+      blogService.setToken(user.token)
 
       setUser(user)
       setUsername('')
       setPassword('')
+
     } catch (exception) {
-      notify('väärä käyttäjänimi tai salasana', 'error')
+      noti('väärä käyttäjänimi tai salasana', 'error')
     }
   }
   const addBlog = (event) => {
 
     event.preventDefault()
+
+    try {
     const newBlog = {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
       likes: '0',
     }
-    notify(`uusi luotu nimellä: ${newBlog.title}`)
+    
     blogService
       .create(newBlog)
       .then(returnedBlog => {
@@ -101,8 +115,12 @@ const App = () => {
         setNewTitle('')
         setNewAuthor('')
         setNewUrl('')
+        notify(`uusi luotu nimellä: ${newBlog.title}`)
       })
+    } catch (exception) {
+      noti(`ei toimi`, 'error')
   }
+}
   const handleTitleChange = (event) => {
     setNewTitle(event.target.value)
   }

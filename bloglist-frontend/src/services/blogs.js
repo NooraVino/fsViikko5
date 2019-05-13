@@ -8,6 +8,9 @@ let token = null
 const setToken = newToken => {
   token = `bearer ${newToken}`
 }
+const removeToken = () => {
+  token = null
+}
 
 const getAll = () => {
   const request = axios.get(baseUrl)
@@ -30,4 +33,4 @@ const create = async newObject => {
 
 
 
-export default { getAll, setToken, create }
+export default { getAll, setToken, create, removeToken }
