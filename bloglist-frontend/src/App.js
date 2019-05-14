@@ -104,14 +104,14 @@ const App = () => {
     event.preventDefault()
     noteFormRef.current.toggleVisibility()
 
-    
+
     const newBlog = {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
       likes: '0',
     }
-    
+
     blogService
       .create(newBlog)
       .then(returnedBlog => {
@@ -121,7 +121,7 @@ const App = () => {
         setNewUrl('')
         notify(`uusi luotu nimellä: ${newBlog.title}`)
       })
-    }
+  }
 
   const handleTitleChange = (event) => {
     setNewTitle(event.target.value)
@@ -170,16 +170,16 @@ const App = () => {
 
   const newBlogForm = () => (
     <Togglable buttonLabel="lisää blogi" ref={noteFormRef}>
-    <NewBlogForm onSubmit={addBlog} newTitle={newTitle} handleTitleChange={handleTitleChange} newAuthor={newAuthor} handleAuthorChange={handleAuthorChange} newUrl={newUrl} handleUrlChange={handleUrlChange}/>
-  
-  </Togglable>
-  
+      <NewBlogForm onSubmit={addBlog} newTitle={newTitle} handleTitleChange={handleTitleChange} newAuthor={newAuthor} handleAuthorChange={handleAuthorChange} newUrl={newUrl} handleUrlChange={handleUrlChange} />
+
+    </Togglable>
+
   )
 
   return (
     <div>
       <Notification notification={notification} />
-     
+
       {user === null ?
         loginForm() :
         <div>
