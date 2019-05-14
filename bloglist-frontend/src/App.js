@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import NewBlogForm from './components/NewBlogForm'
+import Togglable from './components/Togglable'
 
 
 
@@ -96,11 +98,13 @@ const App = () => {
       noti('väärä käyttäjänimi tai salasana', 'error')
     }
   }
+  const noteFormRef = React.createRef()
   const addBlog = (event) => {
 
     event.preventDefault()
+    noteFormRef.current.toggleVisibility()
 
-    try {
+    
     const newBlog = {
       title: newTitle,
       author: newAuthor,
@@ -117,10 +121,8 @@ const App = () => {
         setNewUrl('')
         notify(`uusi luotu nimellä: ${newBlog.title}`)
       })
-    } catch (exception) {
-      noti(`ei toimi`, 'error')
-  }
-}
+    }
+
   const handleTitleChange = (event) => {
     setNewTitle(event.target.value)
   }
@@ -167,25 +169,23 @@ const App = () => {
   )
 
   const newBlogForm = () => (
-
-    <form onSubmit={addBlog}>
-      <div> blogin nimi: <input value={newTitle} onChange={handleTitleChange} /> </div>
-      <div> julkaisija: <input value={newAuthor} name="Author" onChange={handleAuthorChange} /></div>
-      <div>blogin osoite: <input value={newUrl} name="Url" onChange={handleUrlChange} /></div>
-      <button type="submit">tallenna</button>
-    </form>
+    <Togglable buttonLabel="lisää blogi" ref={noteFormRef}>
+    <NewBlogForm onSubmit={addBlog} newTitle={newTitle} handleTitleChange={handleTitleChange} newAuthor={newAuthor} handleAuthorChange={handleAuthorChange} newUrl={newUrl} handleUrlChange={handleUrlChange}/>
+  
+  </Togglable>
+  
   )
-
 
   return (
     <div>
       <Notification notification={notification} />
+     
       {user === null ?
         loginForm() :
         <div>
           <p> Sisäänkirjautuneena:  {user.name}</p>
           <button onClick={handleLogout}>kirjaudu ulos</button>
-          <div>{newBlogForm()}</div>
+          {newBlogForm()}
           {blogsForm()}
 
         </div>
@@ -194,5 +194,6 @@ const App = () => {
     </div>
   )
 }
+
 
 export default App
