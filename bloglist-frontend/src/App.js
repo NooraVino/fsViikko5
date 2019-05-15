@@ -4,6 +4,8 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
+import SimpleBlog from './components/SimpleBlog'
+import './index.css'
 
 
 
@@ -175,7 +177,10 @@ const App = () => {
     </Togglable>
 
   )
+ 
 
+
+  
   return (
     <div>
       <Notification notification={notification} />
@@ -183,11 +188,11 @@ const App = () => {
       {user === null ?
         loginForm() :
         <div>
-          <p> Sisäänkirjautuneena:  {user.name}</p>
+          <p className = 'note'> Sisäänkirjautuneena:  {user.name}</p>
           <button onClick={handleLogout}>kirjaudu ulos</button>
           {newBlogForm()}
           {blogsForm()}
-
+      
         </div>
 
       }
