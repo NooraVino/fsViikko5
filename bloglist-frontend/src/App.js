@@ -4,9 +4,8 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 import NewBlogForm from './components/NewBlogForm'
 import Togglable from './components/Togglable'
-import SimpleBlog from './components/SimpleBlog'
 import './index.css'
-
+import { useField } from './hooks/index'
 
 
 const Notification = ({ notification }) => {
@@ -31,12 +30,11 @@ const Notification = ({ notification }) => {
   )
 }
 
-
-
 const App = () => {
+
+  const username = useField('username')
+  const password = useField('password')
   const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
@@ -75,8 +73,7 @@ const App = () => {
     blogService.removeToken()
     window.localStorage.removeItem('loggedNoteappUser')
     setUser(null)
-    console.log('locals: ', window.localStorage.getItem('loggedNoteappUser'))
-    console.log('user:', user.name)
+   
   }
 
   const handleLogin = async (event) => {
@@ -85,7 +82,8 @@ const App = () => {
     try {
 
       const user = await loginService.login({
-        username, password,
+        username: username.value,
+        password: password.value,
       })
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
@@ -93,8 +91,9 @@ const App = () => {
       blogService.setToken(user.token)
 
       setUser(user)
-      setUsername('')
-      setPassword('')
+      username.reset()
+      password.reset()
+
 
     } catch (exception) {
       noti('väärä käyttäjänimi tai salasana', 'error')
@@ -140,21 +139,12 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <h2> Kirjaudu </h2>
       <div>käyttäjätunnus
-        <input
-          type="text"
-          value={username}
-          name="Username"
-          onChange={({ target }) => setUsername(target.value)}
-        />
+        <input{...username}
+          />
       </div>
       <div>
         salasana
-        <input
-          type="password"
-          value={password}
-          name="Password"
-          onChange={({ target }) => setPassword(target.value)}
-        />
+        <input{...password} />
       </div>
       <button type="submit">kirjaudu</button>
     </form>
@@ -177,10 +167,10 @@ const App = () => {
     </Togglable>
 
   )
- 
 
 
-  
+
+
   return (
     <div>
       <Notification notification={notification} />
@@ -188,11 +178,11 @@ const App = () => {
       {user === null ?
         loginForm() :
         <div>
-          <p className = 'note'> Sisäänkirjautuneena:  {user.name}</p>
+          <p className='note'> Sisäänkirjautuneena:  {user.name}</p>
           <button onClick={handleLogout}>kirjaudu ulos</button>
           {newBlogForm()}
           {blogsForm()}
-      
+
         </div>
 
       }
