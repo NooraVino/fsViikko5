@@ -2,34 +2,26 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 const NewBlogForm = ({
-  onSubmit,
-  newTitle,
-  handleTitleChange,
-  newAuthor,
-  handleAuthorChange,
-  newUrl,
-  handleUrlChange
+  addBlog,
+  title,
+  author,
+  url
+
 }) => {
   return (
 
-    <form onSubmit={onSubmit}>
+    <form onSubmit={addBlog}>
       <div> lisää blogi </div>
-      <div> blogin nimi: <input title={newTitle} onChange={handleTitleChange} /> </div>
-      <div> julkaisija: <input author={newAuthor} name="Author" onChange={handleAuthorChange} /></div>
-      <div>blogin osoite: <input url={newUrl} name="Url" onChange={handleUrlChange} /></div>
+      <div> blogin nimi: <input {...title} /> </div>
+      <div> julkaisija: <input {...author} /></div>
+      <div>blogin osoite: <input {...url} /></div>
       <button type="submit">tallenna</button>
     </form>
   )
 }
 
 NewBlogForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  handleTitleChange: PropTypes.func.isRequired,
-  handleAuthorChange: PropTypes.func.isRequired,
-  handleUrlChange: PropTypes.func.isRequired,
-  newTitle: PropTypes.string.isRequired,
-  newAuthor: PropTypes.string.isRequired,
-  newUrl: PropTypes.string.isRequired
+  addBlog: PropTypes.func.isRequired,
 }
 
 export default NewBlogForm

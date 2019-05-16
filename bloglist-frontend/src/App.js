@@ -36,9 +36,9 @@ const App = () => {
   const password = useField('password')
   const [blogs, setBlogs] = useState([])
   const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
   const [notification, setNotification] = useState({
     message: null
   })
@@ -73,7 +73,7 @@ const App = () => {
     blogService.removeToken()
     window.localStorage.removeItem('loggedNoteappUser')
     setUser(null)
-   
+
   }
 
   const handleLogin = async (event) => {
@@ -107,31 +107,20 @@ const App = () => {
 
 
     const newBlog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl,
-      likes: '0',
+      title: title.value,
+      author: author.value,
+      url: url.value,
     }
 
     blogService
       .create(newBlog)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-        setNewTitle('')
-        setNewAuthor('')
-        setNewUrl('')
+        title.reset()
+        author.reset()
+        url.reset()
         notify(`uusi luotu nimellä: ${newBlog.title}`)
       })
-  }
-
-  const handleTitleChange = (event) => {
-    setNewTitle(event.target.value)
-  }
-  const handleAuthorChange = (event) => {
-    setNewAuthor(event.target.value)
-  }
-  const handleUrlChange = (event) => {
-    setNewUrl(event.target.value)
   }
 
 
@@ -140,7 +129,7 @@ const App = () => {
       <h2> Kirjaudu </h2>
       <div>käyttäjätunnus
         <input{...username}
-          />
+        />
       </div>
       <div>
         salasana
@@ -162,14 +151,9 @@ const App = () => {
 
   const newBlogForm = () => (
     <Togglable buttonLabel="lisää blogi" ref={noteFormRef}>
-      <NewBlogForm onSubmit={addBlog} newTitle={newTitle} handleTitleChange={handleTitleChange} newAuthor={newAuthor} handleAuthorChange={handleAuthorChange} newUrl={newUrl} handleUrlChange={handleUrlChange} />
-
+      <NewBlogForm addBlog={addBlog} title={title} author={author} url={url} />
     </Togglable>
-
   )
-
-
-
 
   return (
     <div>
