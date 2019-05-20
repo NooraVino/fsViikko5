@@ -115,7 +115,8 @@ const App = () => {
     blogService
       .create(newBlog)
       .then(returnedBlog => {
-        setBlogs(blogs.concat(returnedBlog))
+        const t = blogs.concat(returnedBlog)
+        setBlogs(t.sort(function(a,b) {return b.likes-a.likes}))
         title.reset()
         author.reset()
         url.reset()
